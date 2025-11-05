@@ -15,14 +15,18 @@ export function setUpAccountBalancesQuery(store: RootStore) {
   const cleanupEffect = createValidatorQueryStoreEffect(store, {
     name: 'accountBalances',
     selector: selectParentSubaccountInfo,
-    getQueryKey: (data) => ['accountBalances', data.wallet],
+    getQueryKey: (data) => {
+      return ['accountBalances', data.wallet];
+    },
     getQueryFn: (compositeClient, data) => {
       if (data.wallet == null) {
         return null;
       }
+
       return () => compositeClient.validatorClient.get.getAccountBalances(data.wallet!);
     },
     onResult: (result) => {
+      console.log('Account balances result', result);
       store.dispatch(setAccountBalancesRaw(queryResultToLoadable(result)));
     },
     onNoQuery: () => store.dispatch(setAccountBalancesRaw(loadableIdle())),

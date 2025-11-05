@@ -75,6 +75,7 @@ export const calculateIsAccountLoading = createAppSelector(
     onboardingGuards: ReturnType<typeof getOnboardingGuards>,
     subaccountId?: number
   ) => {
+    console.log('calculateIsAccountLoading', onboardingState, subaccountId, onboardingGuards);
     const { hasPreviousTransactions } = onboardingGuards;
     return (
       onboardingState === OnboardingState.AccountConnected &&

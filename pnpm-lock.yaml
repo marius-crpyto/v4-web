@@ -1217,6 +1217,7 @@ packages:
 
   /@cosmjs/crypto@0.27.1:
     resolution: {integrity: sha512-vbcxwSt99tIYJg8Spp00wc3zx72qx+pY3ozGuBN8gAvySnagK9dQ/jHwtWQWdammmdD6oW+75WfIHZ+gNa+Ybg==}
+    deprecated: This uses elliptic for cryptographic operations, which contains several security-relevant bugs. To what degree this affects your application is something you need to carefully investigate. See https://github.com/cosmos/cosmjs/issues/1708 for further pointers. Starting with version 0.34.0 the cryptographic library has been replaced. However, private keys might still be at risk.
     dependencies:
       '@cosmjs/encoding': 0.27.1
       '@cosmjs/math': 0.27.1
@@ -3961,7 +3962,7 @@ packages:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.2.1
       '@noble/hashes': 1.8.0
-      '@scure/base': 1.1.9
+      '@scure/base': 1.2.6
       '@types/debug': 4.1.12
       '@types/lodash': 4.17.20
       debug: 4.4.3(supports-color@8.1.1)
@@ -21120,10 +21121,10 @@ packages:
         optional: true
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
-      '@noble/curves': 1.8.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.6.2
-      '@scure/bip39': 1.5.4
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
       abitype: 1.0.8(typescript@5.9.3)
       eventemitter3: 5.0.1
       typescript: 5.9.3

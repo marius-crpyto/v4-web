@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
-import { mainnet } from 'viem/chains';
+import { sepolia } from 'viem/chains';
 
 import { DepositDialog2Props, DialogProps, DialogTypes } from '@/constants/dialogs';
 import { CosmosChainId } from '@/constants/graz';
@@ -37,11 +37,15 @@ function getDefaultToken(
       denom: highestBalance.denom,
     };
   }
-
   if (sourceAccount.chain === WalletNetworkType.Evm) {
+    // return {
+    //   chainId: mainnet.id.toString(),
+    //   denom: USDC_ADDRESSES[mainnet.id],
+    //   decimals: USDC_DECIMALS,
+    // };
     return {
-      chainId: mainnet.id.toString(),
-      denom: USDC_ADDRESSES[mainnet.id],
+      chainId: sepolia.id.toString(),
+      denom: USDC_ADDRESSES[sepolia.id],
       decimals: USDC_DECIMALS,
     };
   }

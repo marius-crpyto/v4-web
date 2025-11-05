@@ -1,4 +1,4 @@
-import { arbitrum, avalanche, base, mainnet, optimism, polygon } from 'viem/chains';
+import { arbitrum, avalanche, base, mainnet, optimism, polygon, sepolia } from 'viem/chains';
 
 import { CosmosChainId } from './graz';
 import { SOLANA_MAINNET_ID } from './solana';
@@ -12,6 +12,12 @@ type Chain = {
 };
 
 export const CHAIN_INFO: { [chainId: string]: Chain } = {
+  [sepolia.id]: {
+    name: 'Sepolia',
+    icon: '/chains/ethereum.png',
+    walletNetworkType: WalletNetworkType.Evm,
+    gasDenom: 'ETH',
+  },
   [mainnet.id]: {
     name: 'Ethereum',
     icon: '/chains/ethereum.png',
@@ -74,7 +80,8 @@ export const CHAIN_INFO: { [chainId: string]: Chain } = {
   },
 };
 
-export const EVM_DEPOSIT_CHAINS = [mainnet, base, optimism, arbitrum, polygon, avalanche];
+// [sepolia, mainnet, base, optimism, arbitrum, polygon, avalanche];
+export const EVM_DEPOSIT_CHAINS = [sepolia];
 export function isEvmDepositChainId(chainId: string) {
   return EVM_DEPOSIT_CHAINS.map((chain) => String(chain.id)).includes(chainId);
 }

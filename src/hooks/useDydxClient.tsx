@@ -58,7 +58,7 @@ const useDydxClientContext = () => {
 
   const [gasDenom, setGasDenom] = useLocalStorage<SelectedGasDenom>({
     key: LocalStorageKey.SelectedGasDenom,
-    defaultValue: SelectedGasDenom.USDC,
+    defaultValue: SelectedGasDenom.NATIVE,
   });
 
   const setSelectedGasDenom = useCallback(

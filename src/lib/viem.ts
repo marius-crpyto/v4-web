@@ -1,9 +1,14 @@
 import { createPublicClient, http } from 'viem';
-import { arbitrum, avalanche, base, mainnet, optimism, polygon } from 'viem/chains';
+import { arbitrum, avalanche, base, mainnet, optimism, polygon, sepolia } from 'viem/chains';
 
 import { ChainId, getAlchemyRPCUrlForChainId } from './wagmi';
 
 export const VIEM_PUBLIC_CLIENTS = {
+  [sepolia.id]: createPublicClient({
+    chain: sepolia,
+    transport: http(getAlchemyRPCUrlForChainId(ChainId.ETH_SEPOLIA)),
+  }),
+
   [mainnet.id]: createPublicClient({
     chain: mainnet,
     transport: http(getAlchemyRPCUrlForChainId(ChainId.ETH_MAINNET)),

@@ -30,6 +30,7 @@ export const DepositFormContent = ({
   setIsOpen: (isOpen: boolean) => void;
   tokenSelectRef: RefObject<HTMLDivElement>;
 }) => {
+  console.log('defaultToken', defaultToken);
   const dispatch = useAppDispatch();
   const { dydxAddress } = useAccounts();
   const { isMobile } = useBreakpoints();

@@ -116,6 +116,7 @@ const useAccountsContext = () => {
 
   const getSubaccounts = async ({ dydxAddress }: { dydxAddress: DydxAddress }) => {
     try {
+      console.log('dydxAddress: ', dydxAddress);
       const response = await indexerClient?.account.getSubaccounts(dydxAddress);
       setDydxSubaccounts(response?.subaccounts);
       return response?.subaccounts ?? [];

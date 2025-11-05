@@ -60,7 +60,7 @@ function makeLazySkipClient() {
       skipClientPromise = import('@skip-go/client');
     }
     const skipClient = await skipClientPromise;
-
+    console.log('skipClient loaded', options);
     // Apply options if they were set before the client was loaded
     if (hasNewOptions && options) {
       skipClient.setClientOptions(options);
@@ -87,6 +87,9 @@ function makeLazySkipClient() {
 
     balances: async (req: Parameters<typeof balances>[0]) => {
       const skipClient = await makeOrGetSkiplient();
+      console.log('skipClient', skipClient);
+      console.log('balances req payload', req);
+      console.log('balances req', await skipClient.balances(req));
       return skipClient.balances(req);
     },
 
@@ -154,7 +157,7 @@ const useSkipClientContext = () => {
         if (sourceAccount.chain !== WalletNetworkType.Evm) {
           throw new Error('no EVM wallet connected');
         }
-
+        console.log('getEvmSigner chainId', chainId);
         const evmWalletClient = (await getWalletClient(wagmiConfig, {
           chainId: Number(chainId),
         })) as WalletClient;
@@ -173,6 +176,7 @@ const useSkipClientContext = () => {
       apiUrl: skip,
       endpointOptions: {
         getRpcEndpointForChain: async (chainId: string) => {
+          console.log('getRpcEndpointForChain', chainId);
           if (chainId === getNobleChainId()) return nobleValidator;
           if (chainId === getNeutronChainId()) return neutronValidator;
           if (chainId === getOsmosisChainId()) return osmosisValidator;
