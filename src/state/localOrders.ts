@@ -4,6 +4,7 @@ import { OrderType } from '@dydxprotocol/v4-client-js';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { keyBy } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import { DEFAULT_SOMETHING_WENT_WRONG_ERROR_PARAMS, ErrorParams } from '@/constants/errors';
 import {
@@ -194,7 +195,7 @@ export const localOrdersSlice = createSlice({
       const { marketId, cancels } = action.payload;
       // when marketId is undefined, it means cancel all orders globally
       const cancelAllKey = marketId ?? CANCEL_ALL_ORDERS_KEY;
-      const uuid = crypto.randomUUID();
+      const uuid = uuidv4(); // crypto.randomUUID();
 
       state.localCancelAlls[uuid] = {
         cancelOrderOperationUuids: cancels.map((c) => c.uuid),
@@ -217,7 +218,7 @@ export const localOrdersSlice = createSlice({
       });
     },
     closeAllPositionsSubmitted: (state, action: PayloadAction<PlaceOrderSubmissionPayload[]>) => {
-      const uuid = crypto.randomUUID();
+      const uuid = uuidv4(); // crypto.randomUUID();
       const places = action.payload;
       state.localCloseAllPositions[uuid] = {
         clientIds: places.map((p) => p.clientId),

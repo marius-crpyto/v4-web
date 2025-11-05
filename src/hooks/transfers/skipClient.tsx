@@ -16,6 +16,7 @@ import {
   waitForTransaction,
 } from '@skip-go/client';
 import { getWalletClient } from '@wagmi/core';
+import { v4 as uuidv4 } from 'uuid';
 import { WalletClient } from 'viem';
 import { useConfig } from 'wagmi';
 
@@ -167,7 +168,7 @@ const useSkipClientContext = () => {
     };
 
     skipClient.setSigners(signers);
-    const id = crypto.randomUUID();
+    const id = uuidv4(); // crypto.randomUUID();
     setInstanceId(id);
   }, [sourceAccount.chain, wagmiConfig]);
 
@@ -192,7 +193,7 @@ const useSkipClientContext = () => {
     };
 
     skipClient.setOptions(options);
-    const id = crypto.randomUUID();
+    const id = uuidv4(); // crypto.randomUUID();
     setInstanceId(id);
   }, [
     compositeClient?.network.validatorConfig.restEndpoint,

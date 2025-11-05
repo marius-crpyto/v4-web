@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { logBonsaiError, logBonsaiInfo } from '@/bonsai/logs';
 import { fromBech32, toHex } from '@cosmjs/encoding';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Address, parseUnits } from 'viem';
 import { sepolia } from 'viem/chains';
 import { useWalletClient } from 'wagmi';
@@ -204,7 +205,7 @@ export const DepositDialog2 = ({ setIsOpen }: DialogProps<DepositDialog2Props>) 
                     raw,
                     recipient
                   );
-                  const depositId = `deposit-${crypto.randomUUID()}`;
+                  const depositId = `deposit-${uuidv4()}`; // crypto.randomUUID();
                   const deposit = {
                     id: depositId,
                     type: 'deposit' as const,

@@ -8,6 +8,7 @@ import {
   REQUEST_TIME_SAMPLE_RATE,
 } from '@/bonsai/logs';
 import typia from 'typia';
+import { v4 as uuidv4 } from 'uuid';
 
 import { timeUnits } from '@/constants/time';
 
@@ -100,7 +101,7 @@ export class IndexerWebsocket {
   private missingMessageDetector: MissingMessageDetector | null = null;
 
   // for logging purposes, to differentiate when user has many tabs open
-  private indexerWsId = crypto.randomUUID();
+  private indexerWsId = uuidv4(); // crypto.randomUUID();
 
   private subscriptions = new SubscriptionManager();
 
