@@ -185,27 +185,17 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
   );
 
   const dydxAddress = localDydxWallet?.address as DydxAddress | undefined;
-  console.log('aaaaaaa ', dydxAddress);
   useEffect(() => {
     dispatch(clearLocalOrders());
   }, [dispatch, dydxAddress]);
 
   // ------ Deposit/Withdraw Methods ------ //
   const balances = useAppSelector(BonsaiCore.account.balances.data);
-  console.log('bbbbb', balances);
   const usdcCoinBalance = balances.usdcAmount;
 
   const [showDepositDialog, setShowDepositDialog] = useState(true);
 
   useEffect(() => {
-    console.log(
-      'isKeplr',
-      isKeplr,
-      'showDepositDialog',
-      showDepositDialog,
-      'usdcCoinBalance',
-      usdcCoinBalance
-    );
     if (isKeplr && usdcCoinBalance) {
       // if (usdcCoinBalance) {
       if (showDepositDialog) {

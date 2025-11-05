@@ -1,8 +1,13 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
+import { logBonsaiError, logBonsaiInfo } from '@/bonsai/logs';
+import { fromBech32, toHex } from '@cosmjs/encoding';
 import styled from 'styled-components';
+import { Address, parseUnits } from 'viem';
 import { sepolia } from 'viem/chains';
+import { useWalletClient } from 'wagmi';
 
+import { BRIDGE_ABI, getBridgeAddressForChain } from '@/constants/bridges';
 import { DepositDialog2Props, DialogProps, DialogTypes } from '@/constants/dialogs';
 import { CosmosChainId } from '@/constants/graz';
 import { STRING_KEYS } from '@/constants/localization';
@@ -19,9 +24,12 @@ import { LoadingSpace } from '@/components/Loading/LoadingSpinner';
 
 import { useAppDispatch } from '@/state/appTypes';
 import { openDialog } from '@/state/dialogs';
+import { addDeposit } from '@/state/transfers';
 import { SourceAccount } from '@/state/wallet';
 
-import { DepositFormContent, DepositFormState } from './DepositForm/DepositFormContainer';
+import { CHAIN_ID_TO_INFO } from '@/lib/viem';
+
+import { DepositFormState } from './DepositForm/DepositFormContainer';
 import { useDepositTokenBalances } from './queries';
 
 function getDefaultToken(
@@ -105,6 +113,41 @@ export const DepositDialog2 = ({ setIsOpen }: DialogProps<DepositDialog2Props>) 
     }
   }, [sourceAccount, dispatch, setIsOpen]);
 
+  const { data: walletClient } = useWalletClient();
+  const [amount, setAmount] = useState('');
+  const [recipient, setRecipient] = useState('');
+  const dispatchApp = useAppDispatch();
+  const { dydxAddress } = useAccounts();
+
+  async function callBridgeDeposit(
+    walletClientParam: any,
+    chainId: string,
+    rawAmount: string,
+    recipientAddress: string
+  ) {
+    const evmChainId = Number(chainId);
+    const bridgeAddress = getBridgeAddressForChain(evmChainId);
+
+    try {
+      const recipientAddressHex = `0x${toHex(fromBech32(recipientAddress).data)}`;
+      console.log('recipientAddressHex', recipientAddressHex);
+      const txHash = await walletClientParam.writeContract({
+        account: sourceAccount.address as Address,
+        address: bridgeAddress as Address,
+        abi: BRIDGE_ABI as any,
+        functionName: 'bridge',
+        args: [rawAmount, recipientAddressHex, '0x00'],
+        chain: (CHAIN_ID_TO_INFO as any)[evmChainId],
+      });
+
+      logBonsaiInfo('DepositDialog2', 'bridge tx submitted', { txHash, evmChainId, bridgeAddress });
+      return txHash;
+    } catch (e) {
+      logBonsaiError('DepositDialog2', 'bridge tx error', { error: e, evmChainId, bridgeAddress });
+      throw e;
+    }
+  }
+
   return (
     <$Dialog
       isOpen
@@ -121,16 +164,107 @@ export const DepositDialog2 = ({ setIsOpen }: DialogProps<DepositDialog2Props>) 
           <LoadingSpace tw="my-4" />
         </div>
       ) : (
-        <DepositFormContent
-          defaultToken={getDefaultToken(sourceAccount, highestBalance)}
-          formState={formState}
-          setFormState={setFormState}
-          setIsOpen={setIsOpen}
-          tokenSelectRef={tokenSelectRef}
-          onShowForm={onShowForm}
-        />
+        <div tw="p-4">
+          <div tw="mb-2">Token: {getDefaultToken(sourceAccount, highestBalance).denom}</div>
+          <div tw="mb-2">
+            <label htmlFor="deposit-amount" tw="mb-1 block">
+              Amount
+              <input
+                id="deposit-amount"
+                tw="w-full rounded-2 border p-2"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0.00"
+              />
+            </label>
+          </div>
+          <div tw="mb-2">
+            <label htmlFor="recipient-address" tw="mb-1 block">
+              Recipient Address
+              <input
+                id="recipient-address"
+                tw="w-full rounded-2 border p-2"
+                value={recipient}
+                onChange={(e) => setRecipient(e.target.value)}
+                placeholder="Enter recipient address (leave empty for self)"
+              />
+            </label>
+          </div>
+          <div tw="flex gap-2">
+            <button
+              type="button"
+              tw="rounded-2 bg-black px-4 py-2 text-white"
+              onClick={async () => {
+                try {
+                  const token = getDefaultToken(sourceAccount, highestBalance);
+                  const raw = parseUnits(amount || '0', token.decimals).toString();
+                  const txHash = await callBridgeDeposit(
+                    walletClient,
+                    token.chainId,
+                    raw,
+                    recipient
+                  );
+                  const depositId = `deposit-${crypto.randomUUID()}`;
+                  const deposit = {
+                    id: depositId,
+                    type: 'deposit' as const,
+                    txHash,
+                    chainId: token.chainId,
+                    status: 'pending' as const,
+                    token,
+                    tokenAmount: raw,
+                    estimatedAmountUsd: '',
+                    isInstantDeposit: false,
+                  };
+                  if (dydxAddress) dispatchApp(addDeposit({ dydxAddress, deposit }));
+                  setIsOpen(false);
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.error('bridge deposit failed', e);
+                }
+              }}
+            >
+              Deposit via Bridge
+            </button>
+            <button
+              type="button"
+              tw="rounded-2 border px-4 py-2"
+              onClick={() => {
+                setIsOpen(false);
+                dispatch(openDialog(DialogTypes.Deposit2({} as any)));
+              }}
+            >
+              Open legacy deposit
+            </button>
+          </div>
+        </div>
       )}
     </$Dialog>
+    // <$Dialog
+    //   isOpen
+    //   preventCloseOnOverlayClick
+    //   withAnimation
+    //   hasHeaderBorder
+    //   setIsOpen={setIsOpen}
+    //   onBack={formState === 'form' ? undefined : onBack}
+    //   title={dialogTitle}
+    //   placement={isMobile ? DialogPlacement.FullScreen : DialogPlacement.Default}
+    // >
+    //   {isLoadingBalances ? (
+    //     <div tw="flex h-full w-full items-center justify-center overflow-hidden">
+    //       <LoadingSpace tw="my-4" />
+    //     </div>
+    //   ) : (
+    //     <DepositFormContent
+    //       defaultToken={getDefaultToken(sourceAccount, highestBalance)}
+    //       formState={formState}
+    //       setFormState={setFormState}
+    //       setIsOpen={setIsOpen}
+    //       tokenSelectRef={tokenSelectRef}
+    //       onShowForm={onShowForm}
+    //     />
+    //   )}
+    // </$Dialog>
   );
 };
 

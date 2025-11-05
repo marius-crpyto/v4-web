@@ -60,11 +60,9 @@ export function calculateParentSubaccountSummary(
   parent: ParentSubaccountDataBase,
   markets: MarketsData
 ): GroupedSubaccountSummary {
-  console.log('calculateParentSubaccountSummary markets: ', markets);
   const summaries = mapValues(parent.childSubaccounts, (subaccount) =>
     subaccount != null ? calculateSubaccountSummary(subaccount, markets) : subaccount
   );
-  console.log('calculateParentSubaccountSummary: ', parent.parentSubaccount);
   const parentSummary = summaries[parent.parentSubaccount];
   if (parentSummary == null) {
     throw new Error('Parent subaccount not found in ParentSubaccountData');

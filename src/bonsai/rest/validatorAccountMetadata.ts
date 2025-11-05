@@ -26,7 +26,6 @@ export function setUpAccountBalancesQuery(store: RootStore) {
       return () => compositeClient.validatorClient.get.getAccountBalances(data.wallet!);
     },
     onResult: (result) => {
-      console.log('Account balances result', result);
       store.dispatch(setAccountBalancesRaw(queryResultToLoadable(result)));
     },
     onNoQuery: () => store.dispatch(setAccountBalancesRaw(loadableIdle())),

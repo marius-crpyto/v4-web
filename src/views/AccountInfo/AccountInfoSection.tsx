@@ -57,9 +57,6 @@ export const AccountInfoSection = () => {
   const isLoadingGuards = useAppSelector(calculateIsAccountLoading);
   const isLoadingData =
     useAppSelector(BonsaiCore.account.parentSubaccountSummary.loading) === 'pending';
-  console.log('isLoadingGuards', isLoadingGuards);
-  console.log('isLoadingData', isLoadingData);
-  console.log('!!isLoadingGuards || isLoadingData', !!isLoadingGuards || isLoadingData);
 
   const isLoading = !!isLoadingGuards || isLoadingData;
 
@@ -128,10 +125,6 @@ export const AccountInfoSection = () => {
       )}
     </div>
   );
-
-  console.log('isPostOrderBalanceNegative', isPostOrderBalanceNegative);
-  console.log('portfolioValue', portfolioValue);
-  console.log('availableBalance', availableBalance);
 
   const detailItems = [
     {
