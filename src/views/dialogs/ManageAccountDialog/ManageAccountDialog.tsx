@@ -38,7 +38,7 @@ const ManagementSection = ({
   </$ManagementSection>
 );
 
-type AccountManagementPage = 'default' | 'dydxExport' | 'turnkeyExport';
+type AccountManagementPage = 'default' | 'dydxExport'; // | 'turnkeyExport';
 
 export const ManageAccountDialog = ({ setIsOpen }: DialogProps<ManageAccountDialogProps>) => {
   const stringGetter = useStringGetter();
@@ -63,7 +63,7 @@ export const ManageAccountDialog = ({ setIsOpen }: DialogProps<ManageAccountDial
       description={stringGetter({ key: STRING_KEYS.EXPORT_PHRASE_DESC })}
     >
       <div tw="flexColumn gap-1">
-        <button
+        {/* <button
           type="button"
           tw="row gap-0.25 rounded-[0.75rem] bg-color-layer-2 px-1 py-0.75"
           onClick={() => setPage('turnkeyExport')}
@@ -79,7 +79,7 @@ export const ManageAccountDialog = ({ setIsOpen }: DialogProps<ManageAccountDial
               '--icon-size': '0.75rem',
             }}
           />
-        </button>
+        </button> */}
 
         <button
           type="button"
@@ -118,19 +118,19 @@ export const ManageAccountDialog = ({ setIsOpen }: DialogProps<ManageAccountDial
         onBack={() => setPage('default')}
       />
     ),
-    turnkeyExport: (
-      <RevealPhrase
-        exportWalletType="turnkey"
-        closeDialog={() => setIsOpen(false)}
-        onBack={() => setPage('default')}
-      />
-    ),
+    // turnkeyExport: (
+    //   <RevealPhrase
+    //     exportWalletType="turnkey"
+    //     closeDialog={() => setIsOpen(false)}
+    //     onBack={() => setPage('default')}
+    //   />
+    // ),
   }[page];
 
   const title = {
     default: stringGetter({ key: STRING_KEYS.ACCOUNT_MANAGEMENT }),
     dydxExport: stringGetter({ key: STRING_KEYS.REVEAL_SECRET_PHRASE }),
-    turnkeyExport: stringGetter({ key: STRING_KEYS.REVEAL_SECRET_PHRASE }),
+    // turnkeyExport: stringGetter({ key: STRING_KEYS.REVEAL_SECRET_PHRASE }),
   }[page];
 
   return (
