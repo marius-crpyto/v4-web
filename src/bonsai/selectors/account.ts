@@ -86,9 +86,11 @@ export const selectCurrentMarketInfoRaw = createAppSelector(
 export const selectParentSubaccountSummary = createAppSelector(
   [selectRawParentSubaccountData, selectRelevantMarketsData],
   (parentSubaccount, markets) => {
+    console.log('selectParentSubaccountSummary parentSubaccount: ', parentSubaccount);
     if (parentSubaccount == null || markets == null) {
       return undefined;
     }
+    console.log('selectParentSubaccountSummary markets: ', markets);
     const result = calculateParentSubaccountSummary(parentSubaccount, markets);
     return result;
   }

@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import { NumberFormatValues } from 'react-number-format';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AlertType } from '@/constants/alerts';
 import { AnalyticsEvents } from '@/constants/analytics';
@@ -186,7 +187,7 @@ export const VaultDepositWithdrawForm = ({
     if (isSubmitting) {
       return;
     }
-    const userOperationId = crypto.randomUUID();
+    const userOperationId = uuidv4(); // crypto.randomUUID();
 
     track(
       AnalyticsEvents.AttemptVaultOperation({

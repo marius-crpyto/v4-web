@@ -44,13 +44,14 @@ export const TestnetDepositForm = ({ onDeposit, onError }: DepositFormProps) => 
     }
   }, [subAccount]);
 
+  console.log('1111');
+
   return (
     <$Form
       onSubmit={async (e: FormEvent) => {
         e.preventDefault();
 
         setIsLoading(true);
-
         try {
           await requestFaucetFunds();
           onDeposit?.();

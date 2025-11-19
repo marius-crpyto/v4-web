@@ -52,10 +52,11 @@ export function useDepositTokenBalances() {
 
   const [withBalances, noBalances] = useMemo(() => {
     if (!data || !data.chains) return [[], []];
-
+    console.log('data.chains', data.chains);
     const allBalances: TokenBalance[] = Object.keys(data.chains)
       .map((chainId) => {
         const denomToBalance = data.chains?.[chainId]?.denoms;
+        console.log('denomToBalance', denomToBalance);
         return denomToBalance
           ? Object.entries(denomToBalance).map(([denom, balance]) => ({
               chainId,
@@ -123,6 +124,7 @@ function networkTypeToBalances(
   osmosisAddress?: string,
   neutronAddress?: string
 ): BalanceRequest {
+  console.log('sourceAccount in networkTypeToBalances', sourceAccount);
   if (!sourceAccount.address) {
     throw new Error('fetching balances for undefined address');
   }
@@ -132,12 +134,13 @@ function networkTypeToBalances(
       (acc, curr) => {
         acc[curr.id.toString()] = {
           address: sourceAccount.address!,
-          denoms: [getNativeEvmTokenDenom(curr), USDC_ADDRESSES[curr.id]],
+          denoms: [USDC_ADDRESSES[curr.id]],
         };
         return acc;
       },
       {} as Required<BalanceRequest>['chains']
     );
+    console.log('chainRequest', chainRequest);
     return { chains: chainRequest };
   }
 

@@ -27,7 +27,7 @@ import { useAppDispatch, useAppSelector } from '@/state/appTypes';
 import { openDialog } from '@/state/dialogs';
 import { getCurrentSelectedFormSummary } from '@/state/tradeFormSelectors';
 
-import { MustBigNumber } from '@/lib/numbers';
+import { BIG_NUMBERS, MustBigNumber } from '@/lib/numbers';
 import { Nullable, orEmptyObj } from '@/lib/typeUtils';
 
 import { AccountInfoDiffOutput } from './AccountInfoDiffOutput';
@@ -57,9 +57,14 @@ export const AccountInfoSection = () => {
   const isLoadingGuards = useAppSelector(calculateIsAccountLoading);
   const isLoadingData =
     useAppSelector(BonsaiCore.account.parentSubaccountSummary.loading) === 'pending';
+
   const isLoading = !!isLoadingGuards || isLoadingData;
 
-  const { freeCollateral: availableBalance, marginUsage, equity: portfolioValue } = subAccount;
+  const {
+    freeCollateral: availableBalance = BIG_NUMBERS.ZERO,
+    marginUsage = BIG_NUMBERS.ZERO,
+    equity: portfolioValue = BIG_NUMBERS.ZERO,
+  } = subAccount;
   const parentSubaccountAfterOperation = orEmptyObj(
     useAppSelector(getCurrentSelectedFormSummary).summary.accountDetailsAfter?.account
   );

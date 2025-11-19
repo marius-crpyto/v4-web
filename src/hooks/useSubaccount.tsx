@@ -94,6 +94,7 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
         amount: number;
       }) => {
         try {
+          console.log('deposit amount', amount);
           return await compositeClient?.depositToSubaccount(
             subaccountClient,
             amount.toFixed(usdcDecimals),
@@ -184,7 +185,6 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
   );
 
   const dydxAddress = localDydxWallet?.address as DydxAddress | undefined;
-
   useEffect(() => {
     dispatch(clearLocalOrders());
   }, [dispatch, dydxAddress]);
@@ -197,8 +197,10 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
 
   useEffect(() => {
     if (isKeplr && usdcCoinBalance) {
+      // if (usdcCoinBalance) {
       if (showDepositDialog) {
         const balanceAmount = parseFloat(usdcCoinBalance);
+
         const usdcBalance = balanceAmount - AMOUNT_RESERVED_FOR_GAS_USDC;
         const shouldDeposit = usdcBalance > 0 && usdcBalance.toFixed(2) !== '0.00';
         if (shouldDeposit) {
@@ -221,6 +223,7 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
         return undefined;
       }
 
+      console.log('deposit amount', amount);
       return depositToSubaccount({ subaccountClient, amount });
     },
     [subaccountClient, depositToSubaccount]
@@ -231,6 +234,7 @@ const useSubaccountContext = ({ localDydxWallet }: { localDydxWallet?: LocalWall
       await compositeClient?.validatorClient.get.getAccountBalance(dydxAddress as string, usdcDenom)
     )?.amount;
 
+    console.log('currentBalance', currentBalance);
     if (!currentBalance) throw new Error('Failed to get current balance');
 
     const balanceAmount = formatUnits(BigInt(currentBalance), usdcDecimals);

@@ -112,6 +112,7 @@ export function useGenerateKeys(generateKeysProps?: GenerateKeysProps) {
       const dydxAddress = dydxWallet.address as DydxAddress;
       let hasPreviousTransactions = false;
 
+      console.log('dydxAddress b: ', dydxAddress);
       try {
         const subaccounts = await getSubaccounts({ dydxAddress });
         hasPreviousTransactions = subaccounts.length > 0;

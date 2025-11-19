@@ -24,6 +24,7 @@ import {
   OrderType,
   SubaccountClient,
 } from '@dydxprotocol/v4-client-js';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   AnalyticsEvents,
@@ -854,7 +855,8 @@ export class AccountTransactionSupervisor {
         .with<ValidateLocalWalletMiddlewareProps>(validateLocalWalletMiddleware())
         // populate order details
         .with<{ order: SubaccountOrder; uuid: string }>(async (context, next) => {
-          const uuid = crypto.randomUUID();
+          // const uuid = crypto.randomUUID();
+          const uuid = uuidv4(); // crypto.randomUUID();
           const order = this.getCancelableOrders().find((o) => o.id === orderId);
           if (order == null) {
             return createMiddlewareFailureResult(
@@ -967,7 +969,7 @@ export class AccountTransactionSupervisor {
 
           const ordersWithUuids = orders.map((order) => ({
             order,
-            uuid: crypto.randomUUID(),
+            uuid: uuidv4(), // crypto.randomUUID(),
           }));
 
           return next({ ...context, ordersWithUuids });

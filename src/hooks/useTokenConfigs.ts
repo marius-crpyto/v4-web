@@ -32,7 +32,6 @@ export type TokenConfigsResult = {
 
 const getTokenConfigsData = (selectedDydxChainId: DydxChainId): TokenConfigsResult => {
   const tokensConfigs = TOKEN_CONFIG_MAP[selectedDydxChainId];
-
   return {
     tokensConfigs,
     usdcDenom: tokensConfigs[DydxChainAsset.USDC].denom,

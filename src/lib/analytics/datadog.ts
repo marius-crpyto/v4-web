@@ -1,4 +1,5 @@
 import { datadogLogs } from '@datadog/browser-logs';
+import { v4 as uuidv4 } from 'uuid';
 
 import { CURRENT_MODE } from '@/constants/networks';
 
@@ -7,8 +8,7 @@ const PROXY_URL = import.meta.env.VITE_DATADOG_PROXY_URL;
 const SERVICE_NAME = 'v4-web';
 const LOGGER_NAME = 'v4-web';
 const SITE_NAME = 'datadoghq.com';
-const instanceId = crypto.randomUUID();
-
+const instanceId = uuidv4(); // crypto.randomUUID();
 const LOG_ENDPOINT_PATH = (PROXY_URL ?? '').endsWith('/') ? 'api/v2/logs' : '/api/v2/logs';
 
 if (CLIENT_TOKEN) {

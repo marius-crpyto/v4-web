@@ -5,6 +5,7 @@ import { TYPE_URL_MSG_WITHDRAW_FROM_SUBACCOUNT } from '@dydxprotocol/v4-client-j
 import { RouteResponse, UserAddress } from '@skip-go/client';
 import BigNumber from 'bignumber.js';
 import { initial } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AnalyticsEvents } from '@/constants/analytics';
 import { CosmosChainId } from '@/constants/graz';
@@ -119,7 +120,7 @@ export function useWithdrawStep({
         throw new Error('No local wallets found');
       }
 
-      const withdrawId = `withdraw-${crypto.randomUUID()}`;
+      const withdrawId = `withdraw-${uuidv4()}`; // crypto.randomUUID();
 
       logBonsaiInfo('withdrawHooks', 'withdraw initiated', {
         withdrawId,

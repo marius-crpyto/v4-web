@@ -50,6 +50,7 @@ export const ConfirmPendingDepositDialog = ({
   const handleDepositToSubaccount = async () => {
     setIsLoading(true);
     try {
+      console.log('handleDepositToSubaccount: 1', usdcBalance.toString());
       track(
         AnalyticsEvents.RebalanceWalletFundsInitiated({
           amountToDeposit: usdcBalance.toString(),
@@ -59,7 +60,9 @@ export const ConfirmPendingDepositDialog = ({
           isAutoRebalance: false,
         })
       );
+      console.log('handleDepositToSubaccount: 2', usdcBalance.toString());
       const tx = await deposit(usdcBalance);
+      console.log('handleDepositToSubaccount: 3', usdcBalance.toString());
       track(
         AnalyticsEvents.RebalanceWalletFundsFinalized({
           amountToDeposit: usdcBalance.toString(),
